@@ -1,5 +1,7 @@
 
 # Helper
+
+
 process_study <- function(study) {
   
   safe_extract <- function(x) {
@@ -47,6 +49,7 @@ get_studies <- function(lat=39.0035707, lon=-77.1013313, radius=50, phases=NULL,
   query_params <- list(
                        `filter.geo` = geo_filter,
                        pageSize=200, 
+                       sort="LastUpdatePostDate",
                        fields = paste(
                          "protocolSection.identificationModule",
                          "protocolSection.statusModule",

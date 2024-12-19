@@ -63,7 +63,12 @@ function(input, output, session) {
       leafletProxy("mapa", session, data=studies_df) %>%
         clearMarkers() %>%
         addCircleMarkers(
-          label = ~title, #lapply(lbl, htmltools::HTML),
+          ~lon, ~lat,
+          popup= ~paste0('<b>', title, '</b><br>',
+                         org,'<br>', 
+                         'Status: ', status, '<br>',
+                         '<a href="', link, '" target="_blank">View Study Page</a>'),
+          #label = ~title, #lapply(lbl, htmltools::HTML),
           color="blue")
     } else {
       leafletProxy("mapa", session) %>%
