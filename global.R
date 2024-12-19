@@ -26,19 +26,6 @@ mytheme <- create_theme(
 )
 
 
-# Helper function to filter programs within map bounds
-# de bounds
-filter_bounds <- function(data, bounds) {
-  latRng <- range(bounds$north, bounds$south)
-  lngRng <- range(bounds$east, bounds$west)
-  
-  stopifnot("latitude" %in% colnames(data))
-  
-  subset(data,
-         latitude >= latRng[1] & latitude <= latRng[2] &
-           longitude >= lngRng[1] & longitude <= lngRng[2])
-}
-
 
 # load data
 status <- c("ACTIVE_NOT_RECRUITING",

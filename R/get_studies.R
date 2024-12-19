@@ -6,12 +6,18 @@ process_study <- function(study) {
     if (is.null(x)) return(NA) else return(x)
   }
 
-  title <- safe_extract(study$protocolSection$identificationModule$briefTitle)
-  id <- safe_extract(study$protocolSection$identificationModule$nctId)
-  org <- safe_extract(study$protocolSection$identificationModule$organization$fullName)
-  status <- safe_extract(study$protocolSection$statusModule$overallStatus)
-  endDate <- safe_extract(study$protocolSection$statusModule$completionDateStruct$date)
+  identification_module <- study$protocolSection$identificationModule
+  title <- safe_extract(identification_module$briefTitle)
+  id <- safe_extract(identification_module$nctId)
+  org <- safe_extract(identification_module$organization$fullName)
+  
+  status_module <- study$protocolSection$statusModule
+  
+  status <- safe_extract(status_module$overallStatus)
+  endDate <- safe_extract(status_module$completionDateStruct$date)
+  
   phase <- safe_extract(study$protocolSection$designModule$phases[[1]])
+  
   lon <- safe_extract(study$protocolSection$contactsLocationsModule$locations[[1]]$geoPoint$lon)
   lat <- safe_extract(study$protocolSection$contactsLocationsModule$locations[[1]]$geoPoint$lat)
   
@@ -28,25 +34,30 @@ process_study <- function(study) {
 }
 
 # TODO: pass params to the API
-get_studies <- function(map_bounds=NULL, phases=NULL, overallStatus=NULL, condition = "") {
+get_studies <- function(map_bounds=NULL, phases=NULL, status=NULL, condition = "") {
   
   base_url <- "https://clinicaltrials.gov/api/v2/studies"
 
   query_params <- list(pageSize=20, 
-                       #fields="protocolSection",
+                       fields = paste(
+                         "protocolSection.identificationModule",
+                         "protocolSection.statusModule",
+                         "protocolSection.designModule",
+                         "protocolSection.contactsLocationsModule",
+                         sep = ","
+                       ),
                        countTotal="true")
-  
-  # Add overallStatus if provided
-  if (!is.null(overallStatus) && length(overallStatus) > 0) {
-    query_params$`filter.overallStatus` <- paste(overallStatus, collapse = "|")
-  }
   
   # Add condition if provided
   if (condition != "") {
     query_params$`query.cond` <- condition
   }
   
-  if (!is.null(phase) && length(phase)>0) {
+  if (!is.null(status) && length(status) > 0) {
+    query_params$`filter.overallStatus` <- paste(status, collapse = "|")
+  }
+  
+  if (!is.null(phases) && length(phases)>0) {
     query_params$`query.term` <- paste(phases, collapse = "|")
   }
   
@@ -83,8 +94,6 @@ get_studies <- function(map_bounds=NULL, phases=NULL, overallStatus=NULL, condit
   )
   
   # Return the parsed data
-  
-
   result <- do.call(rbind, lapply(data$studies, process_study)) 
   
   if (!is.null(map_bounds)) {
@@ -97,5 +106,5 @@ get_studies <- function(map_bounds=NULL, phases=NULL, overallStatus=NULL, condit
   
 }
 
-studies <- get_studies()
+#studies <- get_studies()
 #saveRDS(studies, file="data/studies.rds")
