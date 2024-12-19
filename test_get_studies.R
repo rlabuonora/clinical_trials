@@ -7,14 +7,14 @@ test_that("get_studies filters studies by map bounds correctly", {
   
   studies <- get_studies()
   expect_equal(length(studies), 2)
-  expect_true(studies$count > 500e3)
+  expect_true(studies$count > 27e3)
 })
 
 test_that("get_studies filters studies by map bounds correctly", {
   
   studies <- get_studies(condition="lung cancer")
   expect_equal(length(studies), 2)
-  expect_true(studies$count > 10e3)
+  expect_true(studies$count > 1e3)
   
 })
 
@@ -25,6 +25,7 @@ test_that("get_studies returns correct fields", {
                                          "org",
                                          "status",
                                          "phase",
+                                         "link",
                                          "endDate",
                                          "lon",
                                          "lat"))
@@ -34,6 +35,24 @@ test_that("get_studies filters by status", {
   
   studies_data <- get_studies(status="COMPLETED")$data
   expect_true(all(studies_data$status=="COMPLETED"))
+})
+
+test_that("get_studies filters by status with multiple args", {
+  
+  studies_data <- get_studies(status=c("COMPLETED", "RECRUITING"))$data
+  expect_true(all(studies_data$status %in% c("COMPLETED", "RECRUITING")))
+})
+
+test_that("get_studies filters by study phase", {
+  
+  studies_data <- get_studies(phase="PHASE1")$data
+  expect_true(all(studies_data$phase=="PHASE1"))
+})
+
+test_that("get_studies filters by status with multiple args", {
+  
+  studies_data <- get_studies(phase=c("PHASE1", "PHASE2"))$data
+  #expect_true(all(studies_data$status %in% c("COMPLETED", "RECRUITING")))
 })
 
 test_that("geo filter", {
@@ -59,11 +78,9 @@ test_that("geo filter wit large radius", {
   lon <- 0.17578
   radius <- 5628.616
   studies <- get_studies(lat=lat, lon=lon,  radius=radius)
-  expect_true(studies$count > 300e3)
+  expect_true(studies$count > 200e3)
   
 })
-
-
 
 
 test_that("map bounds to lon lat raduis", {

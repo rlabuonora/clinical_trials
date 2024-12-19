@@ -36,8 +36,9 @@ process_study <- function(study) {
 }
 
 # TODO: pass params to the API
-get_studies <- function(lat=NULL, lon=NULL, radius=NULL, phases=NULL, status=NULL, condition = "") {
+get_studies <- function(lat=39.0035707, lon=-77.1013313, radius=50, phases=NULL, status=NULL, condition = "") {
   
+
   base_url <- "https://clinicaltrials.gov/api/v2/studies"
   
   geo_filter <- paste0("distance(", lat, ",", lon, ",", radius, "mi)")
@@ -45,7 +46,7 @@ get_studies <- function(lat=NULL, lon=NULL, radius=NULL, phases=NULL, status=NUL
   
   query_params <- list(
                        `filter.geo` = geo_filter,
-                       pageSize=500, 
+                       pageSize=200, 
                        fields = paste(
                          "protocolSection.identificationModule",
                          "protocolSection.statusModule",

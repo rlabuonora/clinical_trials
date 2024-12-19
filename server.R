@@ -36,10 +36,12 @@ function(input, output, session) {
     center_and_radius <- get_center_and_radius(input$mapa_bounds)
     print(input$mapa_bounds)
     print(center_and_radius)
+    
+    print(input$status)
     new_data <- get_studies(lat=center_and_radius$latitude,
                             lon=center_and_radius$longitude,
                             radius=center_and_radius$radius,
-                            status="COMPLETED",
+                            status=input$status,
                             phase=input$phase, 
                             condition=input$condition)
     
