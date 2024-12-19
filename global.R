@@ -28,7 +28,7 @@ mytheme <- create_theme(
 
 
 # load data
-status <- c("ACTIVE_NOT_RECRUITING",
+STATUSES <- c("ACTIVE_NOT_RECRUITING",
             "COMPLETED",
              "ENROLLING_BY_INVITATION",
              "NOT_YET_RECRUITING",

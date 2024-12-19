@@ -33,11 +33,15 @@ body <- dashboardBody(
           column(width = 6,
                leafletOutput("mapa", 
                              height = 600)),
-    column(width=2,
-                selectizeInput("phase",
-                                  "Status",
-                                  choices = status, 
+    column(width=4,
+              selectizeInput("phase",
+                                  "Phase",
+                                  choices = PHASES, 
                                   multiple = TRUE),
+              selectizeInput("status",
+                          "Status",
+                          choices = STATUSES, 
+                          multiple = TRUE),
            textInput("condition", "Condition"),
            actionButton("api_request", "Fetch Data"))))),
   tabPanel(
@@ -45,12 +49,12 @@ body <- dashboardBody(
     box(
       width = NULL, 
       headerBorder=FALSE,
-      title="Explore Studies",
+      title="",
       status = "primary",
       fluidRow(
         column(width=12,
                withSpinner(
-                 dataTableOutput("studies_tbl")))))
+                 DT::dataTableOutput("studies_tbl")))))
   )))
 
 

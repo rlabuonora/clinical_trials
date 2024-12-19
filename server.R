@@ -5,17 +5,20 @@ function(input, output, session) {
   })
   
   
-  output$studies_tbl <- renderDataTable({
-    
-    req(studies())
+  output$studies_tbl <- DT::renderDT({
 
-    datatable(select(studies(), org, title, phase),
+    req(studies())
+    
+    studies_df <- studies()
+   
+
+    datatable(dplyr::select(studies_df, org, title, phase, status),
                selection = 'none',
               options = list(pageLength = 20),
-              colnames=c("Organization", "Title", "Phase"), 
+              colnames=c("Organization", "Title", "Phase", "Status"),
               rownames= FALSE)
+    
   })
-
 
   output$mapa <- renderLeaflet({
     
@@ -29,18 +32,33 @@ function(input, output, session) {
   
   observeEvent(input$api_request, {
     
+    #print(input$mapa_bounds)
+    center_and_radius <- get_center_and_radius(input$mapa_bounds)
     print(input$mapa_bounds)
-    new_data <- get_studies(input$mapa_bounds, input$phase, input$condition)
+    print(center_and_radius)
+    new_data <- get_studies(lat=center_and_radius$latitude,
+                            lon=center_and_radius$longitude,
+                            radius=center_and_radius$radius,
+                            status="COMPLETED",
+                            phase=input$phase, 
+                            condition=input$condition)
     
-    studies(new_data)
+    if (!is.null(new_data)) {
+      
+      new_data <- new_data$data |> 
+        filter_map_bounds(input$mapa_bounds)
+      
+      studies(new_data)
+    }
+
   })
   
   observe({
     
-    print(studies())
+    studies_df <- studies()
 
-    if(nrow(studies())>0) {
-      leafletProxy("mapa", session, data=studies()) %>%
+    if(nrow(studies_df)>0) {
+      leafletProxy("mapa", session, data=studies_df) %>%
         clearMarkers() %>%
         addCircleMarkers(
           label = ~title, #lapply(lbl, htmltools::HTML),
