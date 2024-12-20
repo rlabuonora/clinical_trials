@@ -56,8 +56,8 @@ test_that("get_studies filters by status with multiple args", {
 })
 
 test_that("geo filter", {
-  lat <- 39.0035707
-  lon <- -77.1013313
+  lat <- 39.3299
+  lon <- -76.6205
   radius <- 50
   studies <- get_studies(lat=lat, lon=lon,  radius=50)
   expect_true(studies$count > 27e3)

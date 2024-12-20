@@ -25,19 +25,16 @@ function(input, output, session) {
     studies_initial <- readRDS('./data/studies.rds')
     
     leaflet(studies_initial) %>%
-      setView(lng = 0, lat = 0, zoom = 1.5) %>% 
+      fitBounds( lng1 = -137.7246, lat1 = 14.77488,
+                 lng2 = -57.74414, lat2 = 55.87531) %>% 
       addProviderTiles("CartoDB.Positron") %>% 
       addCircleMarkers(label = ~title, color="blue") 
   })
   
   observeEvent(input$api_request, {
     
-    #print(input$mapa_bounds)
-    center_and_radius <- get_center_and_radius(input$mapa_bounds)
     print(input$mapa_bounds)
-    print(center_and_radius)
-    
-    print(input$status)
+    center_and_radius <- get_center_and_radius(input$mapa_bounds)
     new_data <- get_studies(lat=center_and_radius$latitude,
                             lon=center_and_radius$longitude,
                             radius=center_and_radius$radius,
@@ -47,7 +44,7 @@ function(input, output, session) {
     
     if (!is.null(new_data)) {
       
-      new_data <- new_data$data |> 
+      new_data <- new_data$data %>%
         filter_map_bounds(input$mapa_bounds)
       
       studies(new_data)
