@@ -42,7 +42,7 @@ function(input, output, session) {
   # runs when app starts
   output$mapa <- renderLeaflet({
 
-    leaflet() %>%
+    leaflet(options = leafletOptions(minZoom = 2)) %>%
       fitBounds(lng1 = initial$mapa_bounds$west, #west
                 lat1 = initial$mapa_bounds$south,  # south
                 lng2 = initial$mapa_bounds$east, # east
@@ -60,6 +60,7 @@ function(input, output, session) {
       leafletProxy("mapa", session, data=studies_df) %>%
         clearMarkers() %>%
         addCircleMarkers(
+          clusterOptions = markerClusterOptions(),
           ~lon, ~lat,
           popup= ~paste0('<b>', title, '</b><br>',
                          org,'<br>', 

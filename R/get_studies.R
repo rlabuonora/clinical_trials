@@ -11,7 +11,7 @@ get_studies <- function(lat=39.0035707, lon=-77.1013313, radius=50, phases=NULL,
   
   query_params <- list(
     `filter.geo` = geo_filter,
-    pageSize=200, 
+    pageSize=10000, 
     sort="LastUpdatePostDate",
     fields = paste(
       "protocolSection.identificationModule",
