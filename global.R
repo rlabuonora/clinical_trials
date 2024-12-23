@@ -49,3 +49,12 @@ PHASES <- c("NA",
            "PHASE2",
            "PHASE3",
            "PHASE4")
+
+initial <- list(
+  phase=PHASES[3],
+  status=STATUSES[2],
+  condition="breast cancer",
+  mapa_bounds = list(north=55.87531, 
+                    east=-57.74414,
+                    south=14.77488,
+                    west=-137.7246))

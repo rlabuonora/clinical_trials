@@ -44,7 +44,7 @@ test_that("get_studies filters by status with multiple args", {
 })
 
 test_that("get_studies filters by study phase", {
-  
+  skip("API brings results from other phases")
   studies_data <- get_studies(phase="PHASE1")$data
   expect_true(all(studies_data$phase=="PHASE1"))
 })
@@ -70,6 +70,24 @@ test_that("geo filter wit large radius", {
   radius <- 5000
   studies <- get_studies(lat=lat, lon=lon,  radius=radius)
   expect_true(studies$count > 300e3)
+  
+})
+
+test_that("no resuts", {
+  lat <- 39.0035707
+  lon <- -77.1013313
+  radius <- 5000
+  studies <- get_studies(lat=lat, lon=lon,  radius=radius, phases=PHASES)
+  expect_equal(studies$count, 0)
+  expect_equal(nrow(studies$data), 0)
+  expect_equal(colnames(studies$data), c("title",
+                                         "org",
+                                         "status",
+                                         "phase",
+                                         "link",
+                                         "endDate",
+                                         "lon",
+                                         "lat"))
   
 })
 
@@ -100,4 +118,5 @@ test_that("map bounds to lon lat raduis", {
   
 
 })
+
 
