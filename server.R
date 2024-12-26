@@ -12,9 +12,6 @@ function(input, output, session) {
     new_data$data
   })
   
-  
-
-  
   # runs when button is clicked
   observeEvent(input$api_request, {
     
@@ -79,13 +76,26 @@ function(input, output, session) {
     
     req(studies())
     
-    studies_df <- studies()
+    studies_df <- studies() %>%
+      mutate(title=str_c('<a href="', link, '" target="_blank">', str_trunc(title,100), '</a>'))
     
     
     datatable(dplyr::select(studies_df, org, title, phase, status),
               selection = 'none',
-              options = list(pageLength = 20),
-              colnames=c("Organization", "Title", "Phase", "Status"),
+              escape=FALSE,
+              options = list(pageLength = 20,
+                             columnDefs = list(
+                               list(title="Organization",
+                                    width="200px",
+                                    targets=0),
+                               list(title="Title",
+                                    width="800px",
+                                    targets=1),
+                               list(title="Phase",
+                                    targets=2),
+                               list(title="Status",
+                                    targets=3))),
+              #colnames=c("Organization", "Title", "Phase", "Status"),
               rownames= FALSE)
     
   })
