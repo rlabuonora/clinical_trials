@@ -104,10 +104,10 @@ process_study <- function(study) {
   
   status_module <- study$protocolSection$statusModule
   
-  status <- safe_extract(status_module$overallStatus)
+  status <- safe_extract(status_module$overallStatus) %>% str_to_title() %>% str_replace_all("_", " ")
   endDate <- safe_extract(status_module$completionDateStruct$date)
   
-  phase <- safe_extract(study$protocolSection$designModule$phases[[1]])
+  phase <- safe_extract(study$protocolSection$designModule$phases[[1]]) %>% str_to_title() %>% str_replace_all("_", " ")
   
   lon <- safe_extract(study$protocolSection$contactsLocationsModule$locations[[1]]$geoPoint$lon)
   lat <- safe_extract(study$protocolSection$contactsLocationsModule$locations[[1]]$geoPoint$lat)

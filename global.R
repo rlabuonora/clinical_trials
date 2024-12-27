@@ -43,12 +43,18 @@ STATUSES <- c("ACTIVE_NOT_RECRUITING",
              "WITHHELD",
              "UNKNOWN")
 
+STATUS_LABELS <- STATUSES %>% str_to_title() %>% str_replace_all("_", " ")
+STATUS_CHOICES <- setNames(STATUSES, STATUS_LABELS)
+
+
 PHASES <- c("NA",
            "EARLY_PHASE1",
            "PHASE1",
            "PHASE2",
            "PHASE3",
            "PHASE4")
+
+PHASES_CHOICES <- setNames(PHASES, c("Na", "Early Phase 1", "Phase 1", "Phase 2", "Phase 3", "Phase 4"))
 
 initial <- list(
   phase=PHASES[3],

@@ -28,6 +28,7 @@ function(input, output, session) {
       
       new_data <- new_studies$data %>%
         filter_map_bounds(input$mapa_bounds)
+      
       studies(new_data)
     } else {
       studies(new_studies$data)
@@ -77,8 +78,10 @@ function(input, output, session) {
     req(studies())
     
     studies_df <- studies() %>%
-      mutate(title=str_c('<a href="', link, '" target="_blank">', str_trunc(title,100), '</a>'))
-    
+      mutate(title=str_c('<a href="', link, '" target="_blank">', str_trunc(title,100), '</a>')) %>%
+      mutate(phase=phase %>% str_to_title() %>% str_replace_all("_", " ")) %>%
+      mutate(status=status %>% str_to_title() %>% str_replace_all("_", " "))
+      
     
     datatable(dplyr::select(studies_df, org, title, phase, status),
               selection = 'none',

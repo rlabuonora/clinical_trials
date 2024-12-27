@@ -34,19 +34,19 @@ test_that("get_studies returns correct fields", {
 test_that("get_studies filters by status", {
   
   studies_data <- get_studies(status="COMPLETED")$data
-  expect_true(all(studies_data$status=="COMPLETED"))
+  expect_true(all(studies_data$status=="Completed"))
 })
 
 test_that("get_studies filters by status with multiple args", {
   
   studies_data <- get_studies(status=c("COMPLETED", "RECRUITING"))$data
-  expect_true(all(studies_data$status %in% c("COMPLETED", "RECRUITING")))
+  expect_true(all(studies_data$status %in% c("Completed", "Recruiting")))
 })
 
 test_that("get_studies filters by study phase", {
   skip("API brings results from other phases")
   studies_data <- get_studies(phase="PHASE1")$data
-  expect_true(all(studies_data$phase=="PHASE1"))
+  expect_true(all(studies_data$phase=="Phase 1"))
 })
 
 test_that("get_studies filters by status with multiple args", {
