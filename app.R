@@ -20,6 +20,12 @@ header <- dashboardHeader(
 
 body <- dashboardBody(
   use_theme(mytheme),
+  tags$style(HTML("
+      .wrapper {
+        height: 900px !important; 
+        overflow-y: auto; 
+      }
+    ")),
   tabBox(
     width=NULL,
     tabPanel(
@@ -30,12 +36,8 @@ body <- dashboardBody(
         status = "primary",
         fluidRow(
           style = "margin-bottom: 20px;",
-          column(width = 6,
-                 withSpinner(
-                   leafletOutput("mapa", 
-                                 height = 600))),
-          column(width=4,
-                 h2("Focus Your Search"),
+          column(width=2,
+                 h2("Find Studies"),
                  selectizeInput("phase",
                                 "Study phase",
                                 choices = PHASES_CHOICES, 
@@ -49,23 +51,20 @@ body <- dashboardBody(
                  textInput("condition", "Condition/Disease", value = initial$condition),
                  textInput("search_term", "Other terms"),
                  fluidRow(
-                   column(2,
+                   column(4,
                           actionButton("api_request", "Fetch Data")),
                    column(8,
-                          div(uiOutput("message"), style="margin-top: 7px;")
+                          div(uiOutput("message"), style="margin-top: 7px;margin-left: 4px;")
                    )
-                 ))))),
-    tabPanel(
-      title="Explore Studies",
-      box(
-        width = NULL, 
-        headerBorder=FALSE,
-        title="",
-        status = "primary",
-        fluidRow(
-          column(width=12,
+                 )),
+
+          column(width=6,
                  withSpinner(
-                   DT::dataTableOutput("studies_tbl")))))),
+                   DT::dataTableOutput("studies_tbl"))),
+          column(width = 4,
+                 withSpinner(
+                   leafletOutput("mapa", 
+                                 height = 600)))))),
     tabPanel(
       title="FAQ",
       column(width=6,
