@@ -64,7 +64,7 @@ test_that("geo filter", {
   
 })
 
-test_that("geo filter wit large radius", {
+test_that("geo filter with large radius", {
   lat <- 39.0035707
   lon <- -77.1013313
   radius <- 5000
@@ -73,7 +73,7 @@ test_that("geo filter wit large radius", {
   
 })
 
-test_that("no resuts", {
+test_that("no results", {
   lat <- 39.0035707
   lon <- -77.1013313
   radius <- 5000
@@ -117,6 +117,13 @@ test_that("map bounds to lon lat raduis", {
   expect_equal(center_and_radius$radius, 31.80469, tolerance = .01)
   
 
+})
+
+test_that("Integration Example", {
+  # Example usage
+  studies <- get_studies(condition="cancer", search_term="University of Kentucky")
+
+  
 })
 
 
