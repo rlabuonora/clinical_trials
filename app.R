@@ -2,6 +2,7 @@ library(shinydashboard)
 library(leaflet)
 library(shinycssloaders)
 library(leaflet)
+library(fresh)
 
 header <- dashboardHeader(
   title = "Clinical Trials Finder",
@@ -22,7 +23,7 @@ body <- dashboardBody(
   use_theme(mytheme),
   tags$style(HTML("
       .wrapper {
-        height: 900px !important; 
+        height: 800px !important; 
         overflow-y: auto; 
       }
     ")),
@@ -64,7 +65,7 @@ body <- dashboardBody(
           column(width = 4,
                  withSpinner(
                    leafletOutput("mapa", 
-                                 height = 600)))))),
+                                 height = 800)))))),
     tabPanel(
       title="FAQ",
       column(width=6,
@@ -90,11 +91,7 @@ server <- function(input, output, session) {
   
   studies <- reactiveVal({
     #readRDS('./data/studies.rds')
-    center_and_radius <- get_center_and_radius(initial$mapa_bounds)
-    new_data <- get_studies(lat=center_and_radius$latitude,
-                            lon=center_and_radius$longitude,
-                            radius=center_and_radius$radius,
-                            status=initial$status,
+    new_data <- get_studies(status=initial$status,
                             phase=initial$phase, 
                             condition=initial$condition,
                             search_term = "")
@@ -104,12 +101,10 @@ server <- function(input, output, session) {
   # runs when button is clicked
   observeEvent(input$api_request, {
     
-    center_and_radius <- get_center_and_radius(input$mapa_bounds)
-    new_studies <- get_studies(lat=center_and_radius$latitude,
-                               lon=center_and_radius$longitude,
-                               radius=center_and_radius$radius,
-                               status=input$status,
-                               phase=input$phase, 
+
+    studies(NULL)
+    new_studies <- get_studies(status=input$status,
+                               phases=input$phase, 
                                condition=input$condition,
                                search_term = input$search_term)
     
@@ -121,9 +116,15 @@ server <- function(input, output, session) {
       new_data <- new_studies$data 
       
       studies(new_data)
+      output$message <- renderText({
+        paste0("Showing ", nrow(studies()), " studies.")
+      })
     } else {
       
       studies(new_studies$data)
+      output$message <- renderText({
+        paste0("Showing ", nrow(studies()), " studies.")
+      })
     }
   })
   
@@ -165,9 +166,7 @@ server <- function(input, output, session) {
     
   })
   
-  output$message <- renderText({
-    paste0("Showing ", nrow(studies()), " studies.")
-  })
+
   
   output$studies_tbl <- DT::renderDT({
     
